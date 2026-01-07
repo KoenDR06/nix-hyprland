@@ -17,7 +17,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && cfg.enable) {
     home-manager.users.${username}.xdg.configFile."hypr/hyprlock.conf".text = ''
       $font = Monospace
 

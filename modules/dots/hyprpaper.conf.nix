@@ -19,7 +19,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && cfg.enable) {
     home-manager.users.${username}.xdg.configFile."hypr/hyprpaper.conf".text = ''
       ${concatStringsSep "\n" (map (dis:
         if dis.wallpaper != null
