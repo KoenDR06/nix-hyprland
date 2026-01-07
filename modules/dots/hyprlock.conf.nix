@@ -7,6 +7,7 @@
 
   cfg = config.nix-hyprland.dots.hyprlock;
   username = config.horseman.username;
+  hypr = config.nix-hyprland;
 in {
   options = {
     nix-hyprland.dots.hyprlock = {
@@ -17,7 +18,7 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.enable) {
+  config = mkIf (cfg.enable && hypr.enable) {
     home-manager.users.${username}.xdg.configFile."hypr/hyprlock.conf".text = ''
       $font = Monospace
 

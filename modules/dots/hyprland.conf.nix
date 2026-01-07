@@ -21,7 +21,7 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.enable) {
+  config = mkIf (cfg.enable && hypr.enable) {
     home-manager.users.${username}.xdg.configFile."hypr/hyprland.conf".text = ''
       ${concatStringsSep "\n" (map toString hypr.keybindings.binds)}
 

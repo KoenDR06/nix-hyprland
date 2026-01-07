@@ -19,7 +19,7 @@ in {
     };
   };
 
-  config = mkIf (cfg.enable && cfg.enable) {
+  config = mkIf (cfg.enable && hypr.enable) {
     home-manager.users.${username}.xdg.configFile."hypr/hypridle.conf".text = ''
       general {
           lock_cmd = ${hypr.sleep.lockCommand}
