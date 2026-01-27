@@ -44,6 +44,10 @@ in {
         default = "no";
       };
 
+      defaultWallpaper = mkOption {
+        type = types.nullOr types.path;
+      };
+
       displays = mkOption {
         type = types.listOf monitor;
         default = [];

@@ -30,8 +30,13 @@ in {
         else "")
       hypr.monitors.displays)}
 
-      preload = /home/${username}/nix-config/misc/wallpaper.jpg
-      wallpaper = , /home/${username}/nix-config/misc/wallpaper.jpg
+      ${if hypr.monitors.defaultWallpaper != null
+        then ''
+          preload = ${hypr.monitors.defaultWallpaper}
+          wallpaper = , ${hypr.monitors.defaultWallpaper}
+      ''
+      else ""}
+
     '';
   };
 }
