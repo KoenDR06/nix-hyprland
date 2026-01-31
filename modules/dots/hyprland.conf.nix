@@ -351,7 +351,7 @@ in {
 
       ${
         if hypr.monitors.addDefault
-        then "monitor = ,preferred, auto, auto"
+        then "monitor = , preferred, auto, 1"
         else ""
       }
 
