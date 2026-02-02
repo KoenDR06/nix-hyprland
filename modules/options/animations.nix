@@ -3,23 +3,21 @@
   config,
   ...
 }: let
-  inherit (lib) mkOption types strings;
+  inherit (lib) mkOption types mapAttrsToList;
   inherit (builtins) concatStringsSep;
-  inherit (strings) floatToString;
 
   # v0.52.1
 
   # bezier = name, x0, y0, x1, y1
   bezier = types.submodule {
     options = {
-      name = mkOption {type = types.str;};
       startX = mkOption {type = types.number;};
       startY = mkOption {type = types.number;};
       endX = mkOption {type = types.number;};
       endY = mkOption {type = types.number;};
     };
   };
-  bezierToString = bez: "bezier = ${bez.name}, ${floatToString bez.startX}, ${floatToString bez.startY}, ${floatToString bez.endX}, ${floatToString bez.endY}";
+  bezierToString = name: bez: "bezier = ${name}, ${toString bez.startX}, ${toString bez.startY}, ${toString bez.endX}, ${toString bez.endY}";
 
   # animation = name, onoff, speed, curve [,style]
   animation = let
@@ -27,49 +25,55 @@
   in
     types.submodule {
       options = {
-        name = mkOption {type = types.enum availableNames;};
+        name = mkOption {
+          type = types.enum availableNames;
+        };
         enabled = mkOption {
           type = types.bool;
           default = true;
         };
-        speed = mkOption {type = types.number;};
+        speed = mkOption {
+          type = types.number;
+        };
         style = mkOption {
           type = types.str;
           default = "";
         };
         curve = mkOption {
-          type = types.enum (["default"] ++ map (bez: bez.name) config.nix-hyprland.animations.beziers);
+          type = types.nullOr bezier;
+          default = null;
         };
       };
     };
-  animationToString = anim: "animation = ${concatStringsSep ", " (
+
+  animationToString = name: data: "${
+    if data.curve == null
+    then ""
+    else "    " + bezierToString name data.curve
+  }\n    animation = ${concatStringsSep ", " (
     [
-      anim.name
-      (toString anim.enabled)
+      name
+      (toString data.enabled)
     ]
     ++ (
-      if anim.enabled
+      if data.enabled
       then [
-        (floatToString anim.speed)
-        (anim.curve)
-        (anim.style)
+        (toString data.speed)
+        name
+        (data.style)
       ]
       else []
     )
   )}";
+  animationsToString = anims: concatStringsSep "\n" (mapAttrsToList (name: data: animationToString name data) (removeAttrs anims ["__toString"]));
+
 in {
   options.nix-hyprland = {
     animations = {
-      beziers = mkOption {
-        type = types.listOf bezier;
-        default = [];
-        apply = xs: map (x: x // {__toString = gest: bezierToString gest;}) xs;
-      };
-
       animations = mkOption {
-        type = types.listOf animation;
-        default = [];
-        apply = xs: map (x: x // {__toString = gest: animationToString gest;}) xs;
+        type = types.attrsOf animation;
+        default = {};
+        apply = xs: xs // {__toString = animationsToString;};
       };
     };
   };

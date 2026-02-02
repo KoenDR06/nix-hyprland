@@ -3,10 +3,9 @@
   config,
   ...
 }: let
-  inherit (lib) types mkIf trivial strings mkOption;
+  inherit (lib) types mkIf trivial mkOption;
   inherit (builtins) concatStringsSep genList elemAt length;
   inherit (trivial) boolToString;
-  inherit (strings) floatToString;
 
   cfg = config.nix-hyprland.dots.hyprland;
   username = config.horseman.username;
@@ -111,9 +110,7 @@ in {
           enabled = ${boolToString hypr.animations.enabled}
           workspace_wraparound = ${boolToString hypr.animations.workspaceWraparound}
 
-          ${concatStringsSep "\n    " (map toString hypr.animations.beziers)}
-
-          ${concatStringsSep "\n    " (map toString hypr.animations.animations)}
+      ${toString hypr.animations.animations}
       }
 
       input {
@@ -185,7 +182,7 @@ in {
           workspace_swipe_invert = ${boolToString hypr.gestures.workspaceSwipeInvert}
           workspace_swipe_touch_invert = ${boolToString hypr.gestures.workspaceSwipeTouchInvert}
           workspace_swipe_min_speed_to_force = ${toString hypr.gestures.workspaceSwipeMinSpeedToForce}
-          workspace_swipe_cancel_ratio = ${floatToString hypr.gestures.workspaceSwipeCancelRatio}
+          workspace_swipe_cancel_ratio = ${toString hypr.gestures.workspaceSwipeCancelRatio}
           workspace_swipe_create_new = ${boolToString hypr.gestures.workspaceSwipeCreateNew}
           workspace_swipe_direction_lock = ${boolToString hypr.gestures.workspaceSwipeDirectionLock}
           workspace_swipe_direction_lock_threshold = ${toString hypr.gestures.workspaceSwipeDirectionLockThreshold}

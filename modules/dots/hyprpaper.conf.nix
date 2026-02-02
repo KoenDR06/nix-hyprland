@@ -30,12 +30,14 @@ in {
         else "")
       hypr.monitors.displays)}
 
-      ${if hypr.monitors.defaultWallpaper != null
+      ${
+        if hypr.monitors.defaultWallpaper != null
         then ''
           preload = ${hypr.monitors.defaultWallpaper}
           wallpaper = , ${hypr.monitors.defaultWallpaper}
-      ''
-      else ""}
+        ''
+        else ""
+      }
 
     '';
   };

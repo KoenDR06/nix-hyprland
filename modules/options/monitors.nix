@@ -1,6 +1,5 @@
 {lib, ...}: let
-  inherit (lib) mkOption types strings;
-  inherit (strings) floatToString;
+  inherit (lib) mkOption types;
 
   # v0.52.1
   monitor = types.submodule {
@@ -34,7 +33,7 @@
       };
     };
   };
-  monitorToString = mon: "monitor = ${mon.output}, ${mon.resolution}@${mon.refreshRate}, ${toString mon.x}x${toString mon.y}, ${floatToString mon.scale}, transform, ${toString mon.transform}";
+  monitorToString = mon: "monitor = ${mon.output}, ${mon.resolution}@${mon.refreshRate}, ${toString mon.x}x${toString mon.y}, ${toString mon.scale}, transform, ${toString mon.transform}";
 in {
   options.nix-hyprland = {
     monitors = {
