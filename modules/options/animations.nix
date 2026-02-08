@@ -66,7 +66,6 @@
     )
   )}";
   animationsToString = anims: concatStringsSep "\n" (mapAttrsToList (name: data: animationToString name data) (removeAttrs anims ["__toString"]));
-
 in {
   options.nix-hyprland = {
     animations = {

@@ -20,7 +20,7 @@
       };
 
       dispatcher = mkOption {
-        type = types.str;
+        type = types.enum ["exec" "execr" "pass" "sendshortcut" "sendkeystate" "killactive" "forcekillactive" "closewindow" "killwindow" "signal" "signalwindow" "workspace" "movetoworkspace" "movetoworkspacesilent" "togglefloating" "setfloating" "settiled" "fullscreen" "fullscreenstate" "dpms" "forceidle" "pin" "movefocus" "movewindow" "swapwindow" "centerwindow" "resizeactive" "moveactive" "resizewindowpixel" "movewindowpixel" "cyclenext" "swapnext" "tagwindow" "focuswindow" "focusmonitor" "splitratio" "movecursortocorner" "movecursor" "renameworkspace" "exit" "forcerendererreload" "movecurrentworkspacetomonitor" "focusworkspaceoncurrentmonitor" "moveworkspacetomonitor" "swapactiveworkspaces" "bringactivetotop" "alterzorder" "togglespecialworkspace" "focusurgentorlast" "togglegroup" "changegroupactive" "focuscurrentorlast" "lockgroups" "lockactivegroup" "moveintogroup" "moveoutofgroup" "movewindoworgroup" "movegroupwindow" "denywindowfromgroup" "setignoregrouplock" "global" "submap" "event" "setprop" "toggleswallow"];
       };
 
       params = mkOption {
