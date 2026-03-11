@@ -31,6 +31,11 @@ in {
       default = [];
     };
 
+    layerrules = mkOption {
+      type = types.listOf types.str;
+      default = [];
+    };
+
     workspaces = mkOption {
       type = types.listOf types.str;
       default = [];

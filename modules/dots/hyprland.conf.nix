@@ -354,6 +354,8 @@ in {
 
       ${concatStringsSep "\n" (map (wr: "windowrule = " + wr) hypr.windowrules)}
 
+      ${concatStringsSep "\n" (map (wr: "layerrule = " + wr) hypr.layerrules)}
+
       ${concatStringsSep "\n" (map (ws: "workspace = " + ws) hypr.workspaces)}
 
       ${
