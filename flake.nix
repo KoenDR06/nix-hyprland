@@ -23,5 +23,7 @@
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
     nixosModules.default = ./modules;
+
+    hyprLib = import ./lib { lib = nixpkgs.lib; };
   };
 }

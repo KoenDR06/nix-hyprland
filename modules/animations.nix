@@ -4,7 +4,7 @@
 
   hyprTypes = import ./types.nix { inherit lib; };
 
-  cfg = config.nix-hyprland;
+  cfg = config.hypr;
 
   curve_bezier_toString = v: ''{ type = "bezier", points = { {${v.x0}, ${v.y0}}, {${v.x1}, ${v.y1}} } }'';
   curve_bezier = types.addCheck curve_bezier_submod (v: v ? x0 && v ? y0 && v ? x1 && v ? y1);
@@ -50,7 +50,7 @@
                   ) || (it ? enabled && it.enabled == false);
   };
 in {
-  options.nix-hyprland = {
+  options.hypr = {
     curves = mkOption {
       type = types.lazyAttrsOf curve;
       default = {};
@@ -62,7 +62,7 @@ in {
   };
 
   config = {
-    nix-hyprland = {
+    hypr = {
       animations = [{
         enabled = true;
         leaf = "windows";
