@@ -3,7 +3,7 @@
   mkHyprOption = hyprTypes.mkHyprOption;
 in {
   # v0.55.0
-  options.hypr.config = {
+  options.hyprland.config = {
     general = {
       border_size = mkHyprOption hyprTypes.int;
       gaps_in = mkHyprOption hyprTypes.css_gaps;

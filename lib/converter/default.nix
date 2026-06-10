@@ -42,5 +42,7 @@ in rec {
 
     ${concatLines (mapAttrsToList (name: value: ''hl.curve("${name}",${toString value})'') config.curves)}
     ${concatLines (map (anim: ''hl.animation(${toString anim})'') config.animations)}
+
+    ${concatLines (map (mon: ''hl.monitor(${toString mon})'') config.monitors)}
   '';
 }

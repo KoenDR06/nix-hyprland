@@ -1,13 +1,15 @@
 { hyprLib, lib, ... }: let
   inherit (lib) mkOption types;
+
+  inherit (hyprLib.types) curve animation;
 in {
-  options.hypr = {
+  options.hyprland = {
     curves = mkOption {
-      type = types.lazyAttrsOf hyprLib.types.curve;
+      type = types.lazyAttrsOf curve;
       default = {};
     };
     animations = mkOption {
-      type = types.listOf hyprLib.types.animation;
+      type = types.listOf animation;
       default = [];
     };
   };
