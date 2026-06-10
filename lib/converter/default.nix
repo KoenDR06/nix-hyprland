@@ -1,6 +1,7 @@
 {lib, ...}: let
   inherit (lib)
     boolToString
+    concatLines
     concatStringsSep
     filterAttrs
     filterAttrsRecursive
@@ -15,7 +16,6 @@
   minimizeCategory = config: removeEmptySets (removeNulls config);
 
   catComma = concatStringsSep ",";
-  categoryToLua = config: "{" + catComma (mapAttrsToList (name: value: "${name}=" + (if (value ? "__toString") then (toString value) else if (typeOf value == "set") then (categoryToLua value) else (toStringCustom value))) config) + "}";
 
   toStringCustom = it:
     if (typeOf it == "bool")
@@ -24,8 +24,23 @@
       if (typeOf it == "string")
       then "\"${toString it}\""
       else (toString it);
-in {
+in rec {
+  categoryToLua = config: "{" + catComma (
+    mapAttrsToList (name: value:
+      "${name}=" + (
+        if (value ? "__toString")
+        then (toString value)
+        else if (typeOf value == "set")
+          then (categoryToLua value)
+          else (toStringCustom value)
+      )
+    ) (minimizeCategory config)
+  ) + "}";
+
   toLua = config: ''
-    hl.config(${categoryToLua (minimizeCategory config.config)})
+    hl.config(${categoryToLua config.config})
+
+    ${concatLines (mapAttrsToList (name: value: ''hl.curve("${name}",${toString value})'') config.curves)}
+    ${concatLines (map (anim: ''hl.animation(${toString anim})'') config.animations)}
   '';
 }

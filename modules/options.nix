@@ -1,4 +1,4 @@
-{hyprLib, lib, config, ...}: let
+{ hyprLib, lib, config, ... }: let
   hyprTypes = hyprLib.types;
   mkHyprOption = hyprTypes.mkHyprOption;
 in {
