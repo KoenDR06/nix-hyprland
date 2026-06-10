@@ -164,6 +164,34 @@ in rec {
     };
   };
 
+  bind = with types; let
+    mkBind = attrs: {
+      __toString = it: "hl.bind(${attrs.keys}, ${attrs.dispatcher}, ${categoryToLua (removeAttrs attrs ["keys" "dispatcher"])})";
+      inherit attrs;
+    };
+  in mkCustomOptionType "bind" mkBind {
+    mandatory = {
+      keys = str;
+      dispatcher = str;
+    };
+    optional = {
+      locked = { t = nullOr bool; default = null; };
+      release = { t = nullOr bool; default = null; };
+      click = { t = nullOr bool; default = null; };
+      drag = { t = nullOr bool; default = null; };
+      long_press = { t = nullOr bool; default = null; };
+      repeating = { t = nullOr bool; default = null; };
+      non_consuming = { t = nullOr bool; default = null; };
+      auto_consuming = { t = nullOr bool; default = null; };
+      mouse = { t = nullOr bool; default = null; };
+      transparent = { t = nullOr bool; default = null; };
+      ignore_mods = { t = nullOr bool; default = null; };
+      dont_inhibit = { t = nullOr bool; default = null; };
+      submap_universal = { t = nullOr bool; default = null; };
+      device = { t = nullOr bool; default = null; };
+    };
+  };
+
   font_weight = with types; either int (enum ["thin" "ultralight" "light" "semilight" "book" "normal" "medium" "semibold" "bold" "ultrabold" "heavy" "ultraheavy"]);
   int = types.int;
   float = types.number;

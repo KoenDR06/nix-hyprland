@@ -44,5 +44,7 @@ in rec {
     ${concatLines (map (anim: ''hl.animation(${toString anim})'') config.animations)}
 
     ${concatLines (map (mon: ''hl.monitor(${toString mon})'') config.monitors)}
+
+    ${concatLines (map (bind: toString bind) config.binds)}
   '';
 }

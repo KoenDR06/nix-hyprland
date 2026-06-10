@@ -1,7 +1,8 @@
 {...}: {
   imports = [
-    ./options.nix
     ./animations.nix
+    ./binds.nix
     ./monitors.nix
+    ./options.nix
   ];
 }
