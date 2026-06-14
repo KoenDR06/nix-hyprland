@@ -5,5 +5,6 @@
 in {
   options.hyprland.monitors = mkOption {
     type = types.listOf monitor;
+    default = [];
   };
 }

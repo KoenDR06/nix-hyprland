@@ -5,6 +5,7 @@
 in {
   options.hyprland.binds = mkOption {
     type = types.listOf bind;
+    default = [];
   };
 }
 

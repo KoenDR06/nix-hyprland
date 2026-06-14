@@ -165,9 +165,8 @@ in rec {
   };
 
   bind = with types; let
-    mkBind = attrs: {
-      __toString = it: "hl.bind(${attrs.keys}, ${attrs.dispatcher}, ${categoryToLua (removeAttrs attrs ["keys" "dispatcher"])})";
-      inherit attrs;
+    mkBind = attrs: attrs // {
+      __toString = it: "hl.bind(${attrs.keys}, ${attrs.dispatcher}, ${categoryToLua (removeAttrs it ["__toString" "keys" "dispatcher"])})";
     };
   in mkCustomOptionType "bind" mkBind {
     mandatory = {
@@ -189,6 +188,120 @@ in rec {
       dont_inhibit = { t = nullOr bool; default = null; };
       submap_universal = { t = nullOr bool; default = null; };
       device = { t = nullOr bool; default = null; };
+    };
+  };
+
+  windowrule = with types; let
+    mkWindowRule = attrs: attrs // {
+      __toString = it: categoryToLua (removeAttrs it ["__toString"]);
+    };
+  in mkCustomOptionType "windowrule" mkWindowRule {
+    mandatory = {
+      match = attrsOf str;
+    };
+    optional = {
+      float = { t = nullOr bool; default = null; };
+      tile = { t = nullOr bool; default = null; };
+      fullscreen = { t = nullOr bool; default = null; };
+      maximize = { t = nullOr bool; default = null; };
+      fullscreen_state = { t = nullOr str; default = null; };
+      move = { t = nullOr str; default = null; };
+      size = { t = nullOr str; default = null; };
+      center = { t = nullOr bool; default = null; };
+      pseudo = { t = nullOr bool; default = null; };
+      monitor = { t = nullOr str; default = null; };
+      workspace = { t = nullOr str; default = null; };
+      no_initial_focus = { t = nullOr bool; default = null; };
+      pin = { t = nullOr bool; default = null; };
+      group = { t = nullOr str; default = null; };
+      suppress_event = { t = nullOr str; default = null; };
+      content = { t = nullOr str; default = null; };
+      no_close_for = { t = nullOr integer; default = null; };
+      scrolling_width = { t = nullOr number; default = null; };
+      persistent_size = { t = nullOr bool; default = null; };
+      no_max_size = { t = nullOr bool; default = null; };
+      stay_focused = { t = nullOr bool; default = null; };
+      animation = { t = nullOr str; default = null; };
+      border_color = { t = nullOr gradient; default = null; };
+      idle_inhibit = { t = nullOr str; default = null; };
+      opacity = { t = nullOr str; default = null; };
+      tag = { t = nullOr str; default = null; };
+      max_size = { t = nullOr vec2; default = null; };
+      min_size = { t = nullOr vec2; default = null; };
+      border_size = { t = nullOr integer; default = null; };
+      rounding = { t = nullOr integer; default = null; };
+      rounding_power = { t = nullOr number; default = null; };
+      allows_input = { t = nullOr bool; default = null; };
+      dim_around = { t = nullOr bool; default = null; };
+      decorate = { t = nullOr bool; default = null; };
+      focus_on_activate = { t = nullOr bool; default = null; };
+      keep_aspect_ratio = { t = nullOr bool; default = null; };
+      nearest_neighbor = { t = nullOr bool; default = null; };
+      no_anim = { t = nullOr bool; default = null; };
+      no_blur = { t = nullOr bool; default = null; };
+      no_dim = { t = nullOr bool; default = null; };
+      no_focus = { t = nullOr bool; default = null; };
+      no_follow_mouse = { t = nullOr bool; default = null; };
+      no_shadow = { t = nullOr bool; default = null; };
+      no_shortcuts_inhibit = { t = nullOr bool; default = null; };
+      no_screen_share = { t = nullOr bool; default = null; };
+      no_vrr = { t = nullOr bool; default = null; };
+      no_auto_hdr = { t = nullOr bool; default = null; };
+      opaque = { t = nullOr bool; default = null; };
+      force_rgbx = { t = nullOr bool; default = null; };
+      sync_fullscreen = { t = nullOr bool; default = null; };
+      immediate = { t = nullOr bool; default = null; };
+      xray = { t = nullOr bool; default = null; };
+      render_unfocused = { t = nullOr bool; default = null; };
+      scroll_mouse = { t = nullOr number; default = null; };
+      scroll_touchpad = { t = nullOr number; default = null; };
+      confine_pointer = { t = nullOr bool; default = null; };
+      tonemap = { t = nullOr str; default = null; };
+    };
+  };
+
+  workspacerule = with types; let
+    mkWorkSpaceRule = attrs: attrs // {
+      __toString = it: categoryToLua (removeAttrs it ["__toString"]);
+    };
+  in mkCustomOptionType "workspacerule" mkWorkSpaceRule {
+    optional = {
+      monitor = { t = nullOr str; default = null; };
+      default = { t = nullOr bool; default = null; };
+      gaps_in = { t = nullOr int; default = null; };
+      gaps_out = { t = nullOr int; default = null; };
+      border_size = { t = nullOr int; default = null; };
+      no_border = { t = nullOr bool; default = null; };
+      no_shadow = { t = nullOr bool; default = null; };
+      no_rounding = { t = nullOr bool; default = null; };
+      decorate = { t = nullOr bool; default = null; };
+      persistent = { t = nullOr bool; default = null; };
+      on_created_empty = { t = nullOr str; default = null; };
+      default_name = { t = nullOr str; default = null; };
+      layout = { t = nullOr str; default = null; };
+      animation = { t = nullOr str; default = null; };
+    };
+  };
+
+  layerrule = with types; let
+    mkLayerRule = attrs: attrs // {
+      __toString = it: categoryToLua (removeAttrs it ["__toString"]);
+    };
+  in mkCustomOptionType "layerrule" mkLayerRule {
+    mandatory = {
+      match = attrsOf str;
+    };
+    optional = {
+      no_anim = { t = nullOr bool; default = null; };
+      blur = { t = nullOr bool; default = null; };
+      blur_popups = { t = nullOr bool; default = null; };
+      ignore_alpha = { t = nullOr number; default = null; };
+      dim_around = { t = nullOr bool; default = null; };
+      xray = { t = nullOr bool; default = null; };
+      animation = { t = nullOr str; default = null; };
+      order = { t = nullOr int; default = null; };
+      above_lock = { t = nullOr int; default = null; };
+      no_screen_share = { t = nullOr bool; default = null; };
     };
   };
 
