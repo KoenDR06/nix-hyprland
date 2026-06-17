@@ -2,7 +2,7 @@
   hyprTypes = hyprLib.types;
   mkHyprOption = hyprTypes.mkHyprOption;
 in {
-  options.hyprland.config.master = {
+  options.hyprnix.hyprland.config.master = {
     allow_small_split = mkHyprOption hyprTypes.bool;
     special_scale_factor = mkHyprOption hyprTypes.float;
     mfact = mkHyprOption hyprTypes.float;

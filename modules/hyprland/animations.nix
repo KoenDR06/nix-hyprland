@@ -3,7 +3,7 @@
 
   inherit (hyprLib.types) curve animation;
 in {
-  options.hyprland = {
+  options.hyprnix.hyprland = {
     curves = mkOption {
       type = types.lazyAttrsOf curve;
       default = {};

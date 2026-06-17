@@ -37,13 +37,13 @@ in rec {
     ) (minimizeCategory config)
   ) + "}";
 
-  toLua = config: ''
+  hyprland.configToString = config: ''
     hl.config(${categoryToLua config.config})
 
     ${concatLines (mapAttrsToList (name: value: ''hl.curve("${name}",${toString value})'') config.curves)}
     ${concatLines (map (it: ''hl.animation(${toString it})'') config.animations)}
-    ${concatLines (map (it: ''hl.monitor(${toString it})'') config.monitors)}
     ${concatLines (map (it: toString it) config.binds)}
+    ${concatLines (mapAttrsToList (n: v: ''hl.monitor(${categoryToLua (v // {output=n;})})'') config.monitors)}
     ${concatLines (mapAttrsToList (n: v: ''hl.window_rule(name = "${n}", ${toString v})'') config.windowrules)}
     ${concatLines (mapAttrsToList (n: v: ''hl.layer_rule(name = "${n}", ${toString v})'') config.layerrules)}
     ${concatLines (mapAttrsToList (n: v: ''hl.workspace_rule(${toString ({workspace=n;}//v)})'') config.workspacerules)}
@@ -55,5 +55,15 @@ in rec {
           config.events
       )
     ))}
+  '';
+
+  hyprpaper.configToString = config: let
+    config' = minimizeCategory config;
+
+    toKVLines = it: concatLines (mapAttrsToList (n: v: "${n} = ${toStringCustom v}") it);
+  in ''
+    ${toKVLines (removeAttrs config' ["wallpapers"])}
+
+    ${concatLines (mapAttrsToList (n: v: "wallpaper {\n${toKVLines v}}") config'.wallpapers)}
   '';
 }

@@ -2,7 +2,7 @@
   hyprTypes = hyprLib.types;
   mkHyprOption = hyprTypes.mkHyprOption;
 in {
-  options.hyprland.config.scrolling = {
+  options.hyprnix.hyprland.config.scrolling = {
     fullscreen_on_one_column = mkHyprOption hyprTypes.bool;
     column_width = mkHyprOption hyprTypes.float;
     focus_fit_method = mkHyprOption hyprTypes.int;

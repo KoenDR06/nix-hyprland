@@ -3,7 +3,7 @@
 
   inherit (hyprLib.types) windowrule layerrule workspacerule;
 in {
-  options.hyprland = {
+  options.hyprnix.hyprland = {
     windowrules = mkOption {
       type = types.attrsOf windowrule;
       default = {};

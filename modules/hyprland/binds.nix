@@ -3,7 +3,7 @@
 
   inherit (hyprLib.types) bind;
 in {
-  options.hyprland.binds = mkOption {
+  options.hyprnix.hyprland.binds = mkOption {
     type = types.listOf bind;
     default = [];
   };

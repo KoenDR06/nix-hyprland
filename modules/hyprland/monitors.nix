@@ -3,8 +3,8 @@
 
   inherit (hyprLib.types) monitor;
 in {
-  options.hyprland.monitors = mkOption {
-    type = types.listOf monitor;
+  options.hyprnix.hyprland.monitors = mkOption {
+    type = types.attrsOf monitor;
     default = [];
   };
 }

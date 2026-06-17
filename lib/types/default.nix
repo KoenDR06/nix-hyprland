@@ -117,7 +117,7 @@ in rec {
 
   animation = with types; let
     mkAnimation = attrs: {
-      __toString = it: "${categoryToLua ({inherit (attrs) enabled style leaf speed curve;} // { type="spring"; })}";
+      __toString = it: "${categoryToLua {inherit (attrs) enabled style leaf speed curve;}}";
       inherit (attrs) enabled style leaf speed curve;
     };
   in mkCustomOptionType "animation" mkAnimation {
@@ -142,16 +142,10 @@ in rec {
   };
 
   monitor = with types; let
-    mkMonitor = attrs: let
-      args = {inherit (attrs) output scale mode disabled reserved_area mirror;};
-    in {
-      __toString = it: "${categoryToLua args}";
-      inherit (attrs) output position scale mode disabled reserved_area mirror;
+    mkMonitor = attrs: {
+      inherit (attrs) position scale mode disabled reserved_area mirror;
     };
   in mkCustomOptionType "monitor" mkMonitor {
-    mandatory = {
-      output = str;
-    };
     optional = {
       # TODO position could be more type-safe
       position = { t = nullOr str; default = null; };

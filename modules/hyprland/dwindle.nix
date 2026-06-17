@@ -2,7 +2,7 @@
   hyprTypes = hyprLib.types;
   mkHyprOption = hyprTypes.mkHyprOption;
 in {
-  options.hyprland.config.dwindle = {
+  options.hyprnix.hyprland.config.dwindle = {
     force_split = mkHyprOption hyprTypes.int;
     preserve_split = mkHyprOption hyprTypes.bool;
     smart_split = mkHyprOption hyprTypes.bool;
