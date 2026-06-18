@@ -10,10 +10,6 @@ in {
   options.hyprnix.hyprpaper = {
     enable = mkEnableOption "Whether to enable hyprpaper, hyprland's wallpaper manager";
 
-    autoStart = mkOption {
-      type = types.bool;
-      default = false;
-    };
     splash = mkOption {
       type = types.nullOr types.bool;
       default = null;
@@ -51,10 +47,7 @@ in {
           };
         };
       });
+      default = {};
     };
-  };
-
-  config = mkIf (cfg.enable && cfg.autoStart) {
-    hyprnix.hyprland.events."hyprland.start" = [ ''hl.dsp.exec_cmd("hyprpaper")'' ];
   };
 }

@@ -25,7 +25,17 @@
     merge = loc: defs: let
       merged = mergeOneOption loc defs;
       defaults = if (options ? "optional") then (mapAttrs (n: v: v.default) options.optional) else {};
-    in f (defaults // merged);
+
+      defaultTypes = if (options ? "optional") then (mapAttrs (n: v: v.t) options.optional) else {};
+      mandatoryTypes = if (options ? "mandatory") then options.mandatory else {};
+
+      value = (defaults // merged);
+
+      applyMerges = name: type: if value ? ${name}
+        then type.merge (loc ++ [name]) [{file=../../LICENSE; value=value.${name};}]
+        else value.${name};
+
+    in f (value // mapAttrs applyMerges defaultTypes // mapAttrs applyMerges mandatoryTypes);
   };
 in rec {
   vec2 = with types; let
@@ -93,7 +103,7 @@ in rec {
     };
 
     mkBezierCurve = attrs: {
-      __toString = it: ''{type="bezier",points={{${toString it.x0},${toString it.y0}}{${toString it.x1},${toString it.y1}}}}'';
+      __toString = it: ''{type="bezier",points={{${toString it.x0},${toString it.y0}},{${toString it.x1},${toString it.y1}}}}'';
       inherit (attrs) x0 y0 x1 y1;
     };
     spring = mkCustomOptionType "springCurve" mkSpringCurve {
@@ -116,16 +126,15 @@ in rec {
   in either spring bezier;
 
   animation = with types; let
-    mkAnimation = attrs: {
-      __toString = it: "${categoryToLua {inherit (attrs) enabled style leaf speed curve;}}";
-      inherit (attrs) enabled style leaf speed curve;
+    mkAnimation = attrs: attrs // {
+      __toString = it: "${categoryToLua (removeAttrs it ["__toString"])}";
     };
   in mkCustomOptionType "animation" mkAnimation {
     optional = {
-      enabled = { type = bool; default = true; };
+      enabled = { t = bool; default = true; };
       # TODO might want to change type of style
-      style = { type = nullOr str; default = null; };
-      leaf = { type = nullOr enum [
+      style = { t = nullOr str; default = null; };
+      leaf = { t = nullOr (enum [
         "global" "windows" "windowsIn" "windowsOut" "windowsMove" "layers"
         "layersIn" "layersOut" "fade" "fadeIn" "fadeOut" "fadeSwitch"
         "fadeShadow" "fadeDim" "fadeLayers" "fadeLayersIn" "fadeLayersOut"
@@ -133,34 +142,42 @@ in rec {
         "borderangle" "workspaces" "workspacesIn" "workspacesOut"
         "specialWorkspace" "specialWorkspaceIn" "specialWorkspaceOut"
         "zoomFactor" "monitorAdded"
-      ]; default = null; };
-      speed = { type = nullOr number; default = null; };
-      curve = { type = nullOr str; default = null; };
+      ]); default = null; };
+      speed = { t = nullOr number; default = null; };
+      bezier = { t = nullOr str; default = null; };
+      spring = { t = nullOr str; default = null; };
     };
 
-    customCheck = v: (v ? "enabled" && !v.enabled) || (v.leaf != null && v.curve != null && v.speed != null);
+    customCheck = v: (v ? "enabled" && !v.enabled)
+                  || (v.leaf != null && (lib.xor (v ? "spring") (v ? "bezier")) && v.speed != null);
   };
 
   monitor = with types; let
     mkMonitor = attrs: {
-      inherit (attrs) position scale mode disabled reserved_area mirror;
+      inherit (attrs) scale mode disabled reserved_area mirror transform;
+
+      position = if attrs.position == null then null else {
+        x = attrs.position.x;
+        y = attrs.position.y;
+        __toString = it: ''"${toString it.x}x${toString it.y}"'';
+      };
     };
   in mkCustomOptionType "monitor" mkMonitor {
     optional = {
-      # TODO position could be more type-safe
-      position = { t = nullOr str; default = null; };
+      position = { t = nullOr vec2; default = null; };
       # TODO mode could be more type-safe
       mode = { t = nullOr str; default = null; };
       scale = { t = nullOr number; default = null; };
       disabled = { t = nullOr bool; default = null; };
       reserved_area = { t = nullOr css_gaps; default = null; };
       mirror = { t = nullOr str; default = null; };
+      transform = { t = nullOr int; default = null; };
     };
   };
 
   bind = with types; let
     mkBind = attrs: attrs // {
-      __toString = it: "hl.bind(${attrs.keys}, ${attrs.dispatcher}, ${categoryToLua (removeAttrs it ["__toString" "keys" "dispatcher"])})";
+      __toString = it: "hl.bind(\"${attrs.keys}\", ${attrs.dispatcher}, ${categoryToLua (removeAttrs it ["__toString" "keys" "dispatcher"])})";
     };
   in mkCustomOptionType "bind" mkBind {
     mandatory = {
@@ -186,12 +203,11 @@ in rec {
   };
 
   windowrule = with types; let
-    mkWindowRule = attrs: attrs // {
-      __toString = it: categoryToLua (removeAttrs it ["__toString"]);
-    };
+    mkWindowRule = attrs: attrs;
   in mkCustomOptionType "windowrule" mkWindowRule {
     mandatory = {
-      match = attrsOf str;
+      # TODO improve typing
+      match = attrsOf (either (either number str) bool);
     };
     optional = {
       float = { t = nullOr bool; default = null; };
@@ -278,9 +294,7 @@ in rec {
   };
 
   layerrule = with types; let
-    mkLayerRule = attrs: attrs // {
-      __toString = it: categoryToLua (removeAttrs it ["__toString"]);
-    };
+    mkLayerRule = attrs: attrs;
   in mkCustomOptionType "layerrule" mkLayerRule {
     mandatory = {
       match = attrsOf str;
