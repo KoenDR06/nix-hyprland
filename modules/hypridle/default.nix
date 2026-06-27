@@ -44,6 +44,7 @@ in {
           };
           ignore_inhibit = mkOption {
             type = nullOr bool;
+            default = null;
           };
         };
       });

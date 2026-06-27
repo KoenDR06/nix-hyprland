@@ -62,8 +62,16 @@ in rec {
 
   hypridle.configToString = config: let
     settings = minimizeCategory config.general;
+
+    toStringCustom' = it:
+      if (typeOf it == "bool")
+      then (boolToString it)
+      else (toString it);
+
+    toKVLines' = it: concatLines (mapAttrsToList (n: v: "${n} = ${toStringCustom' v}") it);
+    
   in ''
-    ${toKVLines settings}
-    ${concatLines (map (it: "listener {\n${toKVLines it}}") config.listeners)}
+    ${toKVLines' settings}
+    ${concatLines (map (it: "listener {\n${toKVLines' (minimizeCategory it)}}") config.listeners)}
   '';
 }
